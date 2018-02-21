@@ -17,7 +17,7 @@ public class NonceTest {
 
 		System.out.println(String.format("Hash: %s", hashValue));
 
-		String nonceKey = "00000";
+		String nonceKey = "12345";
 		long nonce = 0;
 		boolean nonceFound = false;
 		String nonceHash = "";

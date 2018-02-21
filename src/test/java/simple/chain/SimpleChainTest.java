@@ -23,7 +23,9 @@ public class SimpleChainTest {
 		System.out.println(
 				String.format("Chains Are In Sync: %s", chain1.blockChainHash().equals(chain2.blockChainHash())));
 
-		// Synchronize the blockchain order
+		// Synchronize the blockchain order, 
+		// emulates resolving network peer discovery of new blocks, 
+		// in a very simplified manner
 		chain2 = chain1.Clone();
 		chain2.Add("E");
 

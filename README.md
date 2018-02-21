@@ -1,4 +1,6 @@
-# Simple Blockchain Reference Implementation, by [www.keyholesoftware.com](https://keyholesoftware.com)
+# Simple Blockchain Reference Implementation, 
+
+by [www.keyholesoftware.com](https://keyholesoftware.com)
 
 ## Installation and running 
 

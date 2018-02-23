@@ -1,40 +1,62 @@
 package simple.chain;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class SimpleBlockchain<T> {
-	public List<Block<T>> chain;
-	private Calendar clock;
-
-	public SimpleBlockchain() {
-
-		chain = new ArrayList<Block<T>>();
-
-	}
-
-	private SimpleBlockchain(List<Block<T>> blocks) {
-		clock = Calendar.getInstance();
+public class SimpleBlockchain<T extends Tx> {
+	public List<Block<T>> chain = new ArrayList<Block<T>>();
+	public SimpleBlockchain() {	}
+	public SimpleBlockchain(List<Block<T>> blocks) {
+		this();
 		chain = blocks;
 	}
 
-	public SimpleBlockchain<T> Add(T item) {
+	public List<Block<T>> getChain() {
+		return chain;
+	}
+
+	public void setChain(List<Block<T>> chain) {
+		this.chain = chain;
+	}
+
+	public Block<T> getHead() {
+		
+		Block<T> result = null;
+		if (this.chain.size() > 0) {
+			result = this.chain.get(0);
+		} else {
+		
+	  	 throw new RuntimeException("No Block's have been added to chain...");
+		}
+		
+		return result;
+	}
+	
+	public Block<T> newBlock() {
 		int count = chain.size();
 		String previousHash = "root";
 
-		if (chain.size() > 0)
+		if (count > 0)
 			previousHash = blockChainHash();
 
 		Block<T> block = new Block<T>();
 
-		block.timeStamp = Calendar.getInstance();
-		block.index = count;
-		block.transactions = item;
-		block.previousHash = previousHash;
+		block.setTimeStamp(System.currentTimeMillis());
+		block.setIndex(count);
+		block.setPreviousHash(previousHash);
 		chain.add(block);
+		return block;
+	}
+	
+	public SimpleBlockchain<T> add(T item) {
+
+	   if (chain.size() == 0) {
+			newBlock();
+		} 		
+		
+		getHead().add(item);
 
 		return this;
 	}
@@ -49,14 +71,14 @@ public class SimpleBlockchain<T> {
 
 	public SimpleBlockchain<T> Clone() {
 		List<Block<T>> clonedChain = new ArrayList<Block<T>>();
-		Consumer<Block> consumer = (b) -> clonedChain.add(b);
+		Consumer<Block> consumer = (b) -> clonedChain.add(b.Clone());
 		chain.forEach(consumer);
 		return new SimpleBlockchain<T>(clonedChain);
 	}
 
 	/* Gets the root hash. */
-	public String blockChainHash() {
-		int count = chain.size();
-		return chain.get(count - 1).GetHash();
+	public String blockChainHash() {	
+		return getHead().getHash();
 	}
+		
 }

@@ -5,34 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import com.google.gson.Gson;
-
 import helpers.SHA256;
 
 public class Block<T extends Tx> {
 	public long timeStamp;
 	private int index;
 	private List<T> transactions = new ArrayList<T>();
+	private String hash;
 	private String previousHash;
 	private String merkleRoot;
+	private String nonce = "0000";
 	
 	// caches Transaction SHA256 hashes
     public Map<String,T> map = new HashMap<String,T>();
-	public Gson parser = new Gson();
+    
 	public Block<T> add(T tx) {
 		transactions.add(tx);
 		map.put(tx.hash(), tx);
 		computeMerkleRoot();
+		computeHash();
 		return this;
 	}
+	
 
-	public String getHash() {
-		String serializedData = parser.toJson(transactions);
-		String hash = SHA256.generateHash(timeStamp + index + merkleRoot + serializedData + previousHash);
-		return hash;
+	public void computeMerkleRoot() {		
+		List<String> treeList = merkleTree();
+		// Last element is the merkle root hash if transactions
+		setMerkleRoot(treeList.get(treeList.size()-1) );		
 	}
-
+	
+	
 	public Block<T> Clone() {
 		// Object serialized then rehydrated into a new instance of an object so
 		// memory conflicts don't happen
@@ -58,13 +61,6 @@ public class Block<T extends Tx> {
 		return hash != null;
 	}
 	
-	public void computeMerkleRoot() {
-		
-		List<String> treeList = merkleTree();
-		// Last element is the merkle root hash if transactions
-		setMerkleRoot(treeList.get(treeList.size()-1) );
-		
-	}
 	
 	/*
 	    This method was adapted from the https://github.com/bitcoinj/bitcoinj project
@@ -138,6 +134,25 @@ public class Block<T extends Tx> {
 		return tree;
 	}
 
+	public void computeHash() {
+		  Gson parser = new Gson();
+		  String serializedData = parser.toJson(transactions);	  
+		  setHash(SHA256.generateHash(timeStamp + index + merkleRoot + serializedData + nonce + previousHash));
+	}
+	
+	public String getHash() {
+		
+		// calc hash if not defined, just for testing...
+		if (hash == null) {
+		   computeHash();
+		}
+		
+		return hash;
+	}
+	
+	public void setHash(String h) {
+		this.hash = h;	
+	}
 	
 	public long getTimeStamp() {
 		return timeStamp;
@@ -179,5 +194,12 @@ public class Block<T extends Tx> {
 		this.merkleRoot = merkleRoot;
 	}
 	
-	
+	public String getNonce() {
+		return nonce;
+	}
+
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
+	}
+
 }

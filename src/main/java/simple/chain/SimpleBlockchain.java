@@ -6,34 +6,51 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SimpleBlockchain<T extends Tx> {
+	public static final int BLOCK_SIZE = 10;
 	public List<Block<T>> chain = new ArrayList<Block<T>>();
-	public SimpleBlockchain() {	}
+
+	public SimpleBlockchain() {
+		// create genesis block
+		chain.add(newBlock());
+	}
+
 	public SimpleBlockchain(List<Block<T>> blocks) {
 		this();
 		chain = blocks;
 	}
 
-	public List<Block<T>> getChain() {
-		return chain;
-	}
-
-	public void setChain(List<Block<T>> chain) {
-		this.chain = chain;
-	}
-
 	public Block<T> getHead() {
-		
+
 		Block<T> result = null;
 		if (this.chain.size() > 0) {
-			result = this.chain.get(0);
+			result = this.chain.get(this.chain.size() - 1);
 		} else {
-		
-	  	 throw new RuntimeException("No Block's have been added to chain...");
+
+			throw new RuntimeException("No Block's have been added to chain...");
 		}
-		
+
 		return result;
 	}
-	
+
+	public void addAndValidateBlock(Block<T> block) {
+
+		// compare previous block hash back to genesis hash
+		Block<T> current = block;
+		for (int i = chain.size() - 1; i >= 0; i--) {
+			Block<T> b = chain.get(i);
+			if (b.getHash().equals(current.getPreviousHash())) {
+				current = b;
+			} else {
+
+				throw new RuntimeException("Block Invalid");
+			}
+
+		}
+
+		this.chain.add(block);
+
+	}
+
 	public Block<T> newBlock() {
 		int count = chain.size();
 		String previousHash = "root";
@@ -46,16 +63,22 @@ public class SimpleBlockchain<T extends Tx> {
 		block.setTimeStamp(System.currentTimeMillis());
 		block.setIndex(count);
 		block.setPreviousHash(previousHash);
-		chain.add(block);
+		// chain.add(block);
 		return block;
 	}
-	
+
 	public SimpleBlockchain<T> add(T item) {
 
-	   if (chain.size() == 0) {
+		if (chain.size() == 0) {
+			// genesis block
 			newBlock();
-		} 		
-		
+		}
+
+		// See if head block is full
+		if (getHead().getTransactions().size() >= BLOCK_SIZE) {
+			newBlock();
+		}
+
 		getHead().add(item);
 
 		return this;
@@ -76,9 +99,17 @@ public class SimpleBlockchain<T extends Tx> {
 		return new SimpleBlockchain<T>(clonedChain);
 	}
 
+	public List<Block<T>> getChain() {
+		return chain;
+	}
+
+	public void setChain(List<Block<T>> chain) {
+		this.chain = chain;
+	}
+
 	/* Gets the root hash. */
-	public String blockChainHash() {	
+	public String blockChainHash() {
 		return getHead().getHash();
 	}
-		
+
 }

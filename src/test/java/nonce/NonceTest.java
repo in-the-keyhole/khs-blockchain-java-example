@@ -21,7 +21,7 @@ public class NonceTest {
 		long nonce = 0;
 		boolean nonceFound = false;
 		String nonceHash = "";
-
+         
 		long start = System.currentTimeMillis();
 
 		while (!nonceFound) {

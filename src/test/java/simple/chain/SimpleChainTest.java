@@ -37,7 +37,7 @@ public class SimpleChainTest {
 		System.out.println("Current Chain Head Transactions: ");
 		for (Block block : chain1.chain) {
 			for (Object tx : block.getTransactions()) {
-				System.out.println(tx);
+				System.out.println("\t" + tx);
 			}
 		}
 

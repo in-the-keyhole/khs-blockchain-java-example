@@ -36,7 +36,9 @@ public class SimpleChainTest {
 		
 		System.out.println("Current Chain Head Transactions: ");
 		for (Block block : chain1.chain) {
-			System.out.println(block.getTransactions());
+			for (Object tx : block.getTransactions()) {
+				System.out.println(tx);
+			}
 		}
 
 		// Block Merkle root should equal root hash in Merkle Tree computed from block transactions

@@ -34,7 +34,7 @@ public class NonceTest {
 
 		long ms = System.currentTimeMillis() - start;
 
-		System.out.println(String.format("Nonce: %s ", ms));
+		System.out.println(String.format("Nonce: %s ", nonce));
 		System.out.println(String.format("Nonce Hash: %s", nonceHash));
 		System.out.println(String.format("Nonce Search Time: %s ms", ms));
 		

@@ -51,6 +51,23 @@ public class SimpleBlockchain<T extends Tx> {
 
 	}
 
+	public boolean validate() {
+
+		String previousHash = chain.get(0).getHash();
+		for (Block<T> block : chain) {
+			String currentHash = block.getHash();
+			if (!currentHash.equals(previousHash)) {
+				return false;
+			}
+
+			previousHash = currentHash;
+
+		}
+
+		return true;
+
+	}
+
 	public Block<T> newBlock() {
 		int count = chain.size();
 		String previousHash = "root";
@@ -63,7 +80,6 @@ public class SimpleBlockchain<T extends Tx> {
 		block.setTimeStamp(System.currentTimeMillis());
 		block.setIndex(count);
 		block.setPreviousHash(previousHash);
-		// chain.add(block);
 		return block;
 	}
 

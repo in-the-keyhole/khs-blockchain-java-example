@@ -45,6 +45,13 @@ public class SimpleChainTest {
 		Block headBlock = chain1.getHead();
 		List<Transaction> merkleTree = headBlock.merkleTree();
 		assertTrue(headBlock.getMerkleRoot().equals(merkleTree.get( merkleTree.size() - 1)));
+		
+		
+		// Validate block chain 		
+		assertTrue(chain1.validate());
+		System.out.println(
+				String.format("Chain is Valid: %s", chain1.validate()));
+
 	
 	}
 	

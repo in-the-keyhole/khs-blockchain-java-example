@@ -18,27 +18,31 @@ public class NonceTest {
 		System.out.println(String.format("Hash: %s", hashValue));
 
 		String nonceKey = "12345";
+		// E.g. "00000" :
+		String zeroGoal = new String(new char[nonceKey.length()]).replace("\0", "0");
+
 		long nonce = 0;
-		boolean nonceFound = false;
+		boolean isNonceFound = false;
 		String nonceHash = "";
          
 		long start = System.currentTimeMillis();
 
-		while (!nonceFound) {
+		while (!isNonceFound) {
 
 			nonceHash = SHA256.generateHash(message + nonce);
-			nonceFound = nonceHash.substring(0, nonceKey.length()).equals(nonceKey);
-			nonce++;
-	
+			isNonceFound = nonceHash.substring(0, nonceKey.length()).equals(zeroGoal);
+			if (!isNonceFound) {
+				nonce++;
+			}
 		}
 
 		long ms = System.currentTimeMillis() - start;
 
-		System.out.println(String.format("Nonce: %s ", nonce));
+		System.out.println(String.format("Nonce: %d", nonce));
 		System.out.println(String.format("Nonce Hash: %s", nonceHash));
 		System.out.println(String.format("Nonce Search Time: %s ms", ms));
 		
-		assertTrue(nonceFound);
+		assertTrue(isNonceFound);
 
 	}
 

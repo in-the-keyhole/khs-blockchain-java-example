@@ -63,11 +63,12 @@ public class Block<T extends Tx> {
 		
 	}
 	
-	
-	
 	/*
-	    This method was adapted from the https://github.com/bitcoinj/bitcoinj project
 	    
+	    This method was adapted from the https://github.com/bitcoinj/bitcoinj project
+	      Copyright 2011 Google Inc.
+          Copyright 2014 Andreas Schildbach	      
+	      
 	    The Merkle root is based on a tree of hashes calculated from the
 	    transactions:
 		
@@ -111,14 +112,13 @@ public class Block<T extends Tx> {
 	*/
 	public List<String> merkleTree() {		
 		ArrayList<String> tree = new ArrayList<>();
-		// Start by adding all the hashes of the transactions as leaves of the
-		// tree.
+		// add all transactions as leaves of the tree.
 		for (T t : transactions) {
 			tree.add(t.hash());
 		}
-		int levelOffset = 0; // Offset in the list where the currently processed
-								// level starts.
-		// Step through each level, stopping when we reach the root (levelSize
+		int levelOffset = 0; // first level
+								
+		// Iterate through each level, stopping when we reach the root (levelSize
 		// == 1).
 		for (int levelSize = transactions.size(); levelSize > 1; levelSize = (levelSize + 1) / 2) {
 			// For each pair of nodes on that level:

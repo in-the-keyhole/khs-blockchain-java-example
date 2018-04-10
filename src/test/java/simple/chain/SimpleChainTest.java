@@ -70,14 +70,14 @@ public class SimpleChainTest {
 		Transaction tx = block.getTransactions().get(0);
 
 		// see if block transactions are valid, they should be
-		block.isTransactionValid();
-		assertTrue(block.isTransactionValid());
+		block.transasctionsValid();
+		assertTrue(block.transasctionsValid());
 
 		// mutate the data of a transaction
 		tx.setValue("Z");
 
 		// block should no longer be valid, blocks MerkleRoot does not match computed merkle tree of transactions
-		assertFalse(block.isTransactionValid());
+		assertFalse(block.transasctionsValid());
 
 	}
 

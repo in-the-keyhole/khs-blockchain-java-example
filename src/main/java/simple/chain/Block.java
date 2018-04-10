@@ -55,7 +55,7 @@ public class Block<T extends Tx> {
 		return clone;
 	}
 
-	public boolean isTransactionValid()  {
+	public boolean transasctionsValid()  {
 		
 		List<String> tree = merkleTree();
 		String root = tree.get(tree.size() -1 );

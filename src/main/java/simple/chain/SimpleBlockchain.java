@@ -87,12 +87,12 @@ public class SimpleBlockchain<T extends Tx> {
 
 		if (chain.size() == 0) {
 			// genesis block
-			newBlock();
+			this.chain.add(newBlock());
 		}
 
 		// See if head block is full
 		if (getHead().getTransactions().size() >= BLOCK_SIZE) {
-			newBlock();
+			this.chain.add(newBlock());
 		}
 
 		getHead().add(item);

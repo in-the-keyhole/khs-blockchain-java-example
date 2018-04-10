@@ -55,11 +55,14 @@ public class Block<T extends Tx> {
 		return clone;
 	}
 
-	public boolean isTransactionValid(T tx) {
+	public boolean isTransactionValid()  {
 		
-		T hash = map.get(tx.hash());
-		return hash != null;
+		List<String> tree = merkleTree();
+		String root = tree.get(tree.size() -1 );
+		return root.equals(this.getMerkleRoot());
+		
 	}
+	
 	
 	
 	/*
@@ -97,13 +100,13 @@ public class Block<T extends Tx> {
 		repeated to make it so (see
 		tx3 above). A tree with 5 transactions would look like this:
 		
-		    root
-		 	/ \
-		    1 5
-		   / \ / \
-		   2 3 4 4
+		        root
+		 	    / \
+		        1 5
+		      / \ / \
+		     2 3 4 4
 		   / \ / \ / \
-		  t1 t2 t3 t4 t5 t5
+		t1 t2 t3 t4 t5 t5
 	
 	*/
 	public List<String> merkleTree() {		
@@ -202,4 +205,6 @@ public class Block<T extends Tx> {
 		this.nonce = nonce;
 	}
 
+	
+	
 }
